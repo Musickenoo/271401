@@ -88,10 +88,10 @@ bellman_ford_path = get_path(bellman_ford_parents, end_node)
 bellman_ford_distance = bellman_ford_distances[end_node]
 
 # แสดงค่า
-print("Dijkstra ระหว่าง node :", dijkstra_path)
-print("Dijkstra ระยะทาง:", dijkstra_distance)
-print("Dijkstra เวลา :", dijkstra_time)
+print("Dijkstra เส้นทางที่สั้นที้สุด :", dijkstra_path)
+print("Dijkstra ระยะทางทั้งหมด :", dijkstra_distance)
+print("Dijkstra เวลาทั้งหมด :", dijkstra_time)
 
-print("Bellman-Ford ระหว่าง node:", bellman_ford_path)
-print("Bellman-Ford ระยะทาง:", bellman_ford_distance)
-print("Bellman-Ford เวลา:", bellman_ford_time)
+print("Bellman-Ford เส้นทางที่สั้นที้สุด :", bellman_ford_path)
+print("Bellman-Ford ระยะทางทั้งหมด :", bellman_ford_distance)
+print("Bellman-Ford เวลาทั้งหมด:", bellman_ford_time)
