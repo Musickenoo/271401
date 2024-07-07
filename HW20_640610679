@@ -1,0 +1,97 @@
+import time
+import heapq
+
+# วิธี dijkstra
+def dijkstra(graph, start, end):
+    queue = []
+    heapq.heappush(queue, (0, start))
+    distances = {node: float('infinity') for node in graph}
+    distances[start] = 0
+    parents = {node: None for node in graph}
+    
+    while queue:
+        current_distance, current_node = heapq.heappop(queue)
+
+        if current_node == end:
+            break
+
+        if current_distance > distances[current_node]:
+            continue
+
+        for neighbor, weight in graph[current_node].items():
+            distance = current_distance + weight
+
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                parents[neighbor] = current_node
+                heapq.heappush(queue, (distance, neighbor))
+
+    return distances, parents
+
+# วิธี bellman_ford
+def bellman_ford(graph, start, end):
+    distances = {node: float('infinity') for node in graph}
+    distances[start] = 0
+    parents = {node: None for node in graph}
+
+    for _ in range(len(graph) - 1):
+        for node in graph:
+            for neighbor, weight in graph[node].items():
+                if distances[node] + weight < distances[neighbor]:
+                    distances[neighbor] = distances[node] + weight
+                    parents[neighbor] = node
+
+    return distances, parents
+
+# เก็บ node แต่ละ node ที่ได้
+def get_path(parents, end):
+    path = []
+    while end:
+        path.append(end)
+        end = parents[end]
+    path.reverse()
+    return path
+# ระยะทางแต่ละ node
+graph = {
+    'A': {'B': 4, 'C': 5},'B': {'C': 5, 'E': 5, 'F': 3},
+    'C': {'D': 2, 'F': 3},'D': {'F': 4, 'G': 2},
+    'E': {'I': 5, 'H': 6},'F': {'J': 1},
+    'G': {'J': 3},'H': {'N': 7},'I': {'N': 6, 'O': 5},
+    'J': {'K': 4},'K': {'P': 2, 'L': 1},'L': {'M': 1, 'P': 3, 'U': 7},
+    'M': {'S': 6},'N': {'T': 3},'O': {'U': 4},
+    'P': {'O': 1, 'Q': 2, 'R': 2},'Q': {'U': 2},
+    'R': {'V': 2},'S': {'R': 2},'T': {'U': 1, 'W': 2},
+    'U': {'V': 1, 'X': 2},'V': {'X': 2, 'Y': 3},
+    'W': {'Z': 3},'X': {'Z': 3},'Y': {'Z': 4},'Z': {}
+}
+
+#กำหนดจุดเริ่ม-สิ้นสุด
+start_node = 'A'
+end_node = 'Z'
+
+# ระยะเวลาปรับค่า Dijkstra
+dijkstra_start_time = time.time()
+for _ in range(1000):
+    dijkstra_distances, dijkstra_parents = dijkstra(graph, start_node, end_node)
+dijkstra_end_time = time.time()
+dijkstra_time = (dijkstra_end_time - dijkstra_start_time) / 1000
+dijkstra_path = get_path(dijkstra_parents, end_node)
+dijkstra_distance = dijkstra_distances[end_node]
+
+# ระยะเวลาปรับค่า Bellman-Ford 
+bellman_ford_start_time = time.time()
+for _ in range(1000):
+    bellman_ford_distances, bellman_ford_parents = bellman_ford(graph, start_node, end_node)
+bellman_ford_end_time = time.time()
+bellman_ford_time = (bellman_ford_end_time - bellman_ford_start_time) / 1000
+bellman_ford_path = get_path(bellman_ford_parents, end_node)
+bellman_ford_distance = bellman_ford_distances[end_node]
+
+# แสดงค่า
+print("Dijkstra ระหว่าง node :", dijkstra_path)
+print("Dijkstra ระยะทาง:", dijkstra_distance)
+print("Dijkstra เวลา :", dijkstra_time)
+
+print("Bellman-Ford ระหว่าง node:", bellman_ford_path)
+print("Bellman-Ford ระยะทาง:", bellman_ford_distance)
+print("Bellman-Ford เวลา:", bellman_ford_time)
